@@ -22,11 +22,16 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-// const district = L.tileLayer.wms("http://localhost:8080/geoserver/wms?", {
-//     layers: 'np:district',
-//     format: 'image/png',
-//     styles: 'district_css'
-// }).addTo(map);
+const hotosm = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+});
+
+const district = L.tileLayer.wms("http://localhost:8080/geoserver/wms?", {
+    layers: 'np:district',
+    format: 'image/png'
+   // styles: 'district_css'
+});
 
 // const localWMS = L.tileLayer.wms("http://geoportal.ntnc.org.np/geoserver/ows?", {
 //     layers: 'ntnc:Masked_Palm_civet1',
@@ -36,36 +41,36 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 //     transparent: true
 // }).addTo(map);
 
-var myIcon = L.icon({
-    iconUrl: 'image/marker.jpg',
-    iconSize: [38, 95],
-    iconAnchor: [22, 94],
-    popupAnchor: [-3, -76],
-    // shadowUrl: 'my-icon-shadow.png',
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]
-});
+// const myIcon = L.icon({
+//     iconUrl: 'image/marker.jpg',
+//     iconSize: [38, 95],
+//     iconAnchor: [22, 94],
+//     popupAnchor: [-3, -76],
+//     // shadowUrl: 'my-icon-shadow.png',
+//     shadowSize: [68, 95],
+//     shadowAnchor: [22, 94]
+// });
 
-const startPt = L.marker([cds['lat1'], cds['lng1']]).bindPopup('Start Point');
-const endPt = L.marker([cds['lat2'], cds['lng2']]).addTo(map).bindPopup('End Point');
+// const startPt = L.marker([cds['lat1'], cds['lng1']]).bindPopup('Start Point');
+// const endPt = L.marker([cds['lat2'], cds['lng2']]).addTo(map).bindPopup('End Point');
 
-var from = turf.point([cds['lng1'], cds['lat1']]);
-var to = turf.point([cds['lng2'], cds['lat2']]);
-var options = { units: 'kilometers' };
+// var from = turf.point([cds['lng1'], cds['lat1']]);
+// var to = turf.point([cds['lng2'], cds['lat2']]);
+// var options = { units: 'kilometers' };
 
-var distance = turf.distance(from, to, options);
-console.log(distance);
+// var distance = turf.distance(from, to, options);
+// console.log(distance);
 
-var buffered = turf.buffer(from, 25, { units: 'kilometers' });
-// console.log(buffered);
+// var buffered = turf.buffer(from, 25, { units: 'kilometers' });
+// // console.log(buffered);
 
-const bufferedGeoJSON = L.geoJSON(buffered).addTo(map);
+// const bufferedGeoJSON = L.geoJSON(buffered).addTo(map);
 
-const turfLine = turf.lineString([from.geometry.coordinates, to.geometry.coordinates], { name: 'Dist Line' });
-// console.log(turfLine);
+// const turfLine = turf.lineString([from.geometry.coordinates, to.geometry.coordinates], { name: 'Dist Line' });
+// // console.log(turfLine);
 
-const leafLine = L.geoJSON(turfLine, {}).addTo(map);
-leafLine.bindPopup(`The distance is ${distance.toFixed(2)} km`);
+// const leafLine = L.geoJSON(turfLine, {}).addTo(map);
+// leafLine.bindPopup(`The distance is ${distance.toFixed(2)} km`);
 
 const startBtn = document.getElementById('stPoint');
 const endBtn = document.getElementById('endPoint');
@@ -116,7 +121,7 @@ calculateBtn.addEventListener('click', function () {
     var options = { units: 'kilometers' };
 
     var distance = turf.distance(from, to, options);
-    alert(`The distance between to points is ${distance}`);
+    const distanceval = document.getElementById('distanceval').innerHTML = `The distance between to points is ${distance.toFixed(2)} kilometers`
 });
 
 resetBtn.addEventListener('click', function () {
@@ -127,6 +132,7 @@ resetBtn.addEventListener('click', function () {
         document.getElementById('lng1').value = '';
         document.getElementById('lat2').value = '';
         document.getElementById('lng2').value = '';
+        document.getElementById('distanceval').innerHTML='';
     }
     catch (err) {
 
@@ -135,11 +141,15 @@ resetBtn.addEventListener('click', function () {
 });
 
 var baseMaps = {
-    "OpenStreetMap": tiles
+    "OpenStreetMap": tiles,
+    "Hot OSM": hotosm
 };
 
 var overlayMaps = {
-    "Start": startPt,
-    "end": endPt
+  //  "Start": startPt,
+   // "end": endPt,
+    "District": district
 };
 var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+
