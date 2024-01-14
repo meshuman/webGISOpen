@@ -12,7 +12,7 @@ const cds = {
 //  latDOM.value = '26.45';
 // initialize the map on the "map" div with a given center and zoom
 var map = L.map('map', {
-    center: [26.345, 85.34],
+    center: [28.345, 84.34],
     zoom: 7,
     zoomControl: true
 });
