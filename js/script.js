@@ -1,3 +1,6 @@
+//this is a code to include ...
+// date updated: 
+
 const cds = {
     lat1: 26.478,
     lng1: 86.342,
@@ -43,7 +46,7 @@ var myIcon = L.icon({
     shadowAnchor: [22, 94]
 });
 
-const startPt = L.marker([cds['lat1'], cds['lng1']]).addTo(map).bindPopup('Start Point');
+const startPt = L.marker([cds['lat1'], cds['lng1']]).bindPopup('Start Point');
 const endPt = L.marker([cds['lat2'], cds['lng2']]).addTo(map).bindPopup('End Point');
 
 var from = turf.point([cds['lng1'], cds['lat1']]);
@@ -71,10 +74,10 @@ const resetBtn = document.getElementById('reset');
 
 
 startBtn.addEventListener('click', function () {
-    try{
+    try {
         map.removeLayer(startMark);
     }
-    catch(err){
+    catch (err) {
         alert(`${err.message}`);
     }
 
@@ -108,25 +111,35 @@ calculateBtn.addEventListener('click', function () {
     const lat2 = document.getElementById('lat2').value;
     const lng2 = document.getElementById('lng2').value;
 
-     var from = turf.point([lng1,lat1]);
-     var to = turf.point([lng2,lat2]);
-     var options = { units: 'kilometers' };
+    var from = turf.point([lng1, lat1]);
+    var to = turf.point([lng2, lat2]);
+    var options = { units: 'kilometers' };
 
-     var distance = turf.distance(from, to, options);
-     alert(`The distance between to points is ${distance}`);
+    var distance = turf.distance(from, to, options);
+    alert(`The distance between to points is ${distance}`);
 });
 
-resetBtn.addEventListener('click',function(){
-    try{
+resetBtn.addEventListener('click', function () {
+    try {
         endMark.remove();
         startMark.remove();
         document.getElementById('lat1').value = '';
-        document.getElementById('lng1').value= '';
-        document.getElementById('lat2').value= '';
-        document.getElementById('lng2').value= '';
+        document.getElementById('lng1').value = '';
+        document.getElementById('lat2').value = '';
+        document.getElementById('lng2').value = '';
     }
-    catch(err){
+    catch (err) {
 
     }
-    
+
 });
+
+var baseMaps = {
+    "OpenStreetMap": tiles
+};
+
+var overlayMaps = {
+    "Start": startPt,
+    "end": endPt
+};
+var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
