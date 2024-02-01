@@ -38,21 +38,46 @@ const apiUrl = 'https://earthquake.usgs.gov/fdsnws/event/1/query?' +
     });
 });
 
+
 function displayEarthquakes(earthquakes) {
     const earthquakeList = $('#earthquakeList');
 
-    earthquakes.forEach(function(earthquake) {
+    earthquakes.forEach(function (earthquake) {
         // Create a marker for each earthquake
         const marker = L.marker([earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]])
             .bindPopup(earthquake.properties.place + ' - Magnitude: ' + earthquake.properties.mag)
             .addTo(earthquakeLayer);
-           // earthquakeLayer.addLayer(marker);
-    
+         //earthquakeLayer.addLayer(marker);
+
         // Add earthquake details to the list
         const listItem = $('<li></li>').text(earthquake.properties.place + ' - Magnitude: ' + earthquake.properties.mag);
         earthquakeList.append(listItem);
     });
 }
+// const apiUrl = 'https://earthquake.usgs.gov/fdsnws/event/1/query?' +
+//     'format=geojson&starttime=2000-01-01&minlatitude=26&maxlatitude=31&minlongitude=80&maxlongitude=89&limit=10';
+
+
+// try{
+// //Using fetch to access the API
+// fetch(apiUrl)
+//     .then(function (response) {
+//         return response.json();
+//     })
+//     .then(function (data) {
+//         //console.log(data);
+//         displayEarthquakes(data.features);
+//     })
+//     .catch(function (error) {
+//         console.error('Error fetching data:', error);
+//     });
+// }
+// catch(error){
+//     alert(`The problem is ${error}`)
+// }
+
+
+
 
 const baseMaps = {
     "OpenStreetMap": tiles,
@@ -60,7 +85,7 @@ const baseMaps = {
 };
 
 const overlayMaps = {
-    "Earthquakes":earthquakeLayer
+    "Earthquakes": earthquakeLayer
 };
 const layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
 
